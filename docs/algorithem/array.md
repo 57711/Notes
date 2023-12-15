@@ -1,7 +1,7 @@
 ---
-title: "线性数据结构"
+title: 线性数据结构
+date: 2023-12-15T14:16:43.852Z
 ---
-
 # 线性数据结构
 
 ## Array 数组
@@ -21,23 +21,25 @@ title: "线性数据结构"
 
 **优点**
 
-- 改善插入和删除操作 $O(1)$
-- 不知道一共有多少个元素
+* 改善插入和删除操作 $O(1)$
+* 不知道一共有多少个元素
 
 **缺点**
 
-- 查找需要 $O(n)$
+* 查找需要 $O(n)$
 
 应用
 
-- 区块链 链表/二叉树
+* 区块链 链表/二叉树
 
 ![block chain](/images/array-1.png)
 
 ### 例子
 
 [反转链表](https://leetcode.cn/problems/reverse-linked-list/)
+
 [两辆交换节点](https://leetcode.cn/problems/swap-nodes-in-pairs/description/)
+
 [判断有还](https://leetcode.cn/problems/linked-list-cycle/)
 
 ## 栈 / 队列

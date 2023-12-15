@@ -26,10 +26,6 @@ export default {
                 },
                 // 设置 markdown 内容
                 content: `\
-                ---
-                home: true
-                sidebar: true
-                ---
 # 欢迎来到 ${app.options.title}
 
 ${content}

@@ -21,7 +21,7 @@
 - BloomFilter 布隆过滤器
 - LRU Cache
 
-![分类](image.png)
+![分类](/images/algorithem-index-1.png)
 
 ## 算法
 

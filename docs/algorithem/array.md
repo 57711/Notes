@@ -29,7 +29,7 @@
 
 - 区块链 链表/二叉树
 
-![block chain](image-1.png)
+![block chain](/images/array-1.png)
 
 ### 例子
 
@@ -41,4 +41,4 @@
 
 可以用数组或链表实现，或双链表
 
-[![事件复杂度](image-2.png)](https://www.bigocheatsheet.com/)
+[![事件复杂度](/images/array-2.png)](https://www.bigocheatsheet.com/)

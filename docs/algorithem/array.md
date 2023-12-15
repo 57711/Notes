@@ -40,7 +40,7 @@ date: 2023-12-15T14:16:43.852Z
 
 [两辆交换节点](https://leetcode.cn/problems/swap-nodes-in-pairs/description/)
 
-[判断有还](https://leetcode.cn/problems/linked-list-cycle/)
+[判断有环](https://leetcode.cn/problems/linked-list-cycle/)
 
 ## 栈 / 队列
 

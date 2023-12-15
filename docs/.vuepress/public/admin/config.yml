@@ -5,24 +5,16 @@ backend:
 media_folder: "/docs/.vuepress/public/images"
 public_folder: "assets"
 display_url: https://majestic-ganache-be7ee8.netlify.app/
+show_preview_links: true
+search: true
 collections:
-  - name: "notes" # Used in routes, e.g., /admin/collections/blog
-    label: "Notes" # Used in the UI
-    folder: "/docs" # The path to the folder where the documents are stored
-    create: true # Allow users to create new documents in this collection
-    slug: "{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
-    show_preview_links: true
-    fields: # The fields for each document, usually in front matter
-      - {label: "Title", name: "title", widget: "string"}
-      - {label: "Body", name: "body", widget: "markdown"}
-      - {label: "Publish Date", name: "date", widget: "datetime"}
-      - {label: "Categories", name: "categories", widget: "list"}
   - name: "algorithem" # Used in routes, e.g., /admin/collections/blog
     label: "Algorithem" # Used in the UI
     folder: "/docs/algorithem" # The path to the folder where the documents are stored
     create: true # Allow users to create new documents in this collection
     slug: "{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
     show_preview_links: true
+    format: "frontmatter"
     fields: # The fields for each document, usually in front matter
       - {label: "Title", name: "title", widget: "string"}
       - {label: "Body", name: "body", widget: "markdown"}

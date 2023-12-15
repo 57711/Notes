@@ -8,7 +8,7 @@ function generateNav(parentPath) {
 }
 
 export function getDirectory(rootPath) {
-    let dir = fs.readdirSync(path.resolve(rootPath), { recursive: true, withFileTypes: true });
+    let dir = fs.readdirSync(path.resolve(rootPath), { withFileTypes: true });
     return dir.filter(item => item.isDirectory() && !item.name.startsWith("."))
 }
 

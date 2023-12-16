@@ -1,5 +1,6 @@
 ---
-title: "数据结构 & 算法"
+title: 数据结构 & 算法
+date: 2023-12-16T09:40:42.278Z
 ---
 
 # 数据结构 & 算法
@@ -60,5 +61,5 @@ while (i < 10){
 |  ----  | ----  |  ----  | --------------------- |
 |Binary search <br> 二分查找| $$T(n) = T(n/2) + O(1)$$ |$O(log n)$|Apply Master theorem case $c = log_b a$, where $a = 1, b = 2, c = 0, k = 0$|
 |Binary tree traversal <br>二叉树每个节点仅遍历一次|$T(n) = 2T(n/2) + O(1)$|$O(n)$|Apply Master theorem case $c < log_b a$ where $a = 2, b = 2, c = 0$|
-|Optimal sorted matrix search <br>二维矩阵排序|$T(n) = 2T(n/2) + O(1og n)$|$O(n)$|Apply the Akra-Bazzi theorem for $p = 1$ and $g(u) = log(u)$ to get $\theta(2n - log n)$|
+|Optimal sorted matrix search <br>二维矩阵排序|$T(n) = 2T(n/2) + O(1og n)$|$O(n)$|Apply the Akra-Bazzi theorem for $p = 1$ and $g(u) = log(u)$ to get $O(2n - log n)$|
 |Merge sort <br>快排 归并排序|$T(n) = 2T(n/2) + O(n)$|$O(nlog n)$|Apply Master theorem case $c = log_b a$, where $a = 2, b = 2, c = 1, k = 0$ |

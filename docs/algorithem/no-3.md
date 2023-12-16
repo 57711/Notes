@@ -50,18 +50,18 @@ tree的元素排序好了， 相对有序的排列， 但是时间复杂
 
 ```js
 if(set.has(b)){ // b 是自己， 查找自己有没有被需要
-result.add([a, -a-b, b].toString())
+    result.add([a, -a-b, b].toString())
 } else {
-set.add(-a-b) // 放需要的
+    set.add(-a-b) // 放需要的
 }
 ```
 
 ```js
 const c = -a - b // b 是自己， c是需要的
 if(set.has(c)){ // 查找需要的
-result.add([a, c, b].toString())
+    result.add([a, c, b].toString())
 } else {
-set.add(b) // 放自己
+    set.add(b) // 放自己
 }
 ```
 

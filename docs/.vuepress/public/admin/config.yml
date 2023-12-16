@@ -3,7 +3,7 @@ backend:
   repo: https://github.com/57711/Notes.git
   branch: master # Branch to update (optional; defaults to master)
 media_folder: "/docs/.vuepress/public/images"
-public_folder: "assets"
+public_folder: "/images"
 display_url: https://majestic-ganache-be7ee8.netlify.app/
 show_preview_links: true
 search: true

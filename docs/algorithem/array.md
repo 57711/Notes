@@ -48,7 +48,7 @@ date: 2023-12-15T14:16:43.852Z
 
 * [判断括号问题](https://leetcode.cn/problems/valid-parentheses/)
   用栈或者字符串replace
-* [用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks/) 
+* [用栈实现队列](https://leetcode.cn/problems/implement-queue-using-stacks/)
   一个输入栈， 一个输出栈
 
 [![事件复杂度](/images/array-2.png)](https://www.bigocheatsheet.com/)
@@ -81,4 +81,4 @@ date: 2023-12-15T14:16:43.852Z
 
 ### 堆的时间复杂度
 
-![](assets/截屏2023-12-16-15.58.37.png "堆的时间复杂度")
+![堆的时间复杂度](/images/截屏2023-12-16-15.58.37.png)

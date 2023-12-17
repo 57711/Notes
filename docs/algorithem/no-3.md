@@ -38,15 +38,15 @@ tree的元素排序好了， 相对有序的排列， 但是时间复杂
 
 - [字母异位](https://leetcode.cn/problems/valid-anagram/)
 
-**Method 1**：排序，快排 $O(NlogN)$
+**解1**：排序，快排 $O(NlogN)$
 
-**Method 2**：计数，利用map $O(N)$
+**解2**：计数，利用map $O(N)$
 
 - [two sum](https://leetcode.cn/problems/two-sum/) 利用map 或set 
 
 - [three sum](https://leetcode.cn/problems/3sum/)
 
-**method1**: 前两个树嵌套循环， 最后一个数用set查找, set 中放自己，查找就找我需要的， set 中放需要的， 查找就找自己（被需要）， $O(n^2)$， 空间$O(N)$
+**解1**: 前两个树嵌套循环， 最后一个数用set查找, set 中放自己，查找就找我需要的， set 中放需要的， 查找就找自己（被需要）， $O(n^2)$， 空间$O(N)$
 
 ```js
 if(set.has(b)){ // b 是自己， 查找自己有没有被需要
@@ -65,7 +65,7 @@ if(set.has(c)){ // 查找需要的
 }
 ```
 
-**method2**: sort & find, 先排序$O(NlogN)$，遍历一个数， 后两个数双指针， 大于目标右指针左移， 小于目标左指针右移 $O(n^2)$， 空间不需要set， 空间复杂度小
+**解2**: sort & find, 先排序$O(NlogN)$，遍历一个数， 后两个数双指针， 大于目标右指针左移， 小于目标左指针右移 $O(n^2)$， 空间不需要set， 空间复杂度小
 
 - [four sum](https://leetcode.cn/problems/4sum/)
 

@@ -24,7 +24,7 @@ date: 2023-12-16T09:40:42.278Z
 - Disjoint Set 并查集
 - Trie 单词查找树
 - BloomFilter 布隆过滤器
-- LRU Cache
+- LRU Cache (least recently used)(使用频率)
 
 ![分类](/images/algorithem-index-1.png)
 

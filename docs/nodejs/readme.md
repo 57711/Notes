@@ -6,6 +6,23 @@
 
 `process: kill, exit, hrtime, cpuUsage, memoryUsage, env, argv,`
 
+## process 对象
+
+- 统计信息，cpu，内存等。
+  - process.cpuUsage();
+  - memoryUsage()
+  - env
+  - argv
+- 事件循环机制，process.nextTick。
+  - nodejs 为事件循环位置了一个队列，nextTick 入队列，_tickCallback 出队列。
+- uncaughtException 事件。
+  - 全局异常捕获。
+- 其他
+  - 进程管理，exit，kill。
+  - i/o 相关，stdout，stderr，stdin。
+  - 路径处理，cwd，chdir 等。
+  - 执行时间 hrtime
+
 ## RPC
 
 RPC vs ajax
@@ -13,29 +30,6 @@ RPC vs ajax
 - RPC寻址不使用DNS
 - 协议层不使用HTTP，而是基于TCP或UDP，半双工或双工
 - 数据包格式使用二进制，不用JSON
-
-## Buffer 模块
-
-二进制数据包
-
-创建 `Buffer.from()`, `Buffer.alloc()`
-
-`Buffer.from('string')`
-`Buffer.from([1,2,3])`
-`Buffer.alloc(20)`
-
-00 为8位 `writeInt8`
-00 00 为16位 `writeInt16BE` `writeInt16LE`
-
-BE 大端放高位 / LE 大端放低位
-
-proto buffer 二进制协议编码库
-
-`protocal-buffers` 先写一个 `test.proto` 结构化数据格式
-
-`schema = protobuf(<proto file>)`
-
-`schema.structure.encode({key: value})`
 
 ## net 模块
 

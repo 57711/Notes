@@ -12,6 +12,36 @@
 
 **`Promise.withResolvers()`**: `let { promise, resolve, reject } = Promise.withResolvers()`
 
+## Promise.race()
+
+### 可以用于请求的超时
+
+```js
+const data = Promise.race([
+  fetch("/api"),
+  new Promise((resolve, reject) => {
+    // Reject after 5 seconds
+    setTimeout(() => reject(new Error("Request timed out")), 5000);
+  }),
+])
+  .then((res) => res.json())
+  .catch((err) => displayError(err));
+```
+
+### 用于查看promise 状态
+
+```js
+function promiseState(promise) {
+  const pendingState = { status: "pending" };
+
+  return Promise.race([promise, pendingState]).then(
+    (value) =>
+      value === pendingState ? value : { status: "fulfilled", value },
+    (reason) => ({ status: "rejected", reason }),
+  );
+}
+```
+
 ## promise 多级嵌套，eventloop执行
 
 ```js {.line-numbers}

@@ -125,3 +125,14 @@ React 用一个标记变量 didScheduleRenderPhaseUpdate 判断是否是 render 
 调用 setState，就是 dispatchSetState
 
 ![useState过程](/images/useState过程.png)
+
+## useRef
+
+`useRef(callback)`, 利用 ref callback 可以用一个 ref 管理多个 DOM。何时调用 ref callback：
+
+- 当 DOM 渲染到屏幕，调用参数为 dom node。当 DOM 移除，调用参数为 null
+- ref callback 改变时会调用。每一次 render，ref callback 都是新的，会用 null 调用前一次 ref callback，用 DOM node 调用这一次 ref callback
+
+useRef 或 createRef 用来绑定在当前组件的 hostcomponent 上，跨层级或者绑定到 react 组件用 fowardRef。
+
+Function components cannot be given refs

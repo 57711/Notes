@@ -8,7 +8,9 @@ export default {
     const allDirectory = getDirectory(app.options.source);
     let content = '';
     allDirectory.forEach((item) => {
-      content += `[${item.name}](./${item.name})\n\n`;
+      let name = item.name;
+      name = name.charAt(0).toUpperCase() + name.slice(1);
+      content += `[${name}](./${item.name})\n\n`;
     });
 
     // 如果主页不存在

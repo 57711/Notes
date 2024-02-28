@@ -6,7 +6,6 @@ export default {
   // 初始化之后，所有的页面已经加载完毕
   async onInitialized(app) {
     const allDirectory = getDirectory(app.options.source);
-    console.log(allDirectory);
     let content = '';
     allDirectory.forEach((item) => {
       content += `[${item.name}](./${item.name})\n\n`;

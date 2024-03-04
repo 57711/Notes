@@ -42,6 +42,12 @@ WebGL 提供了更底层的图形 API，可以用来创建复杂的 3D 图形和
 
 ![graphic pipeline](/images/graphic-pipeline.png)
 
+### bvh 优化 raycaster
+
+[ThreeJs 中的 BVH 解析](https://zhuanlan.zhihu.com/p/566945215)
+
+本质是二叉树深度遍历，每个节点是包围盒。
+
 ## 可视化
 
 可视化三个具有前后顺序的动作：数据分组、数据计算和可视化。这也是本文的重点，我将详细说明。

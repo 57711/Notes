@@ -24,7 +24,8 @@ date: 2023-12-16T09:40:42.278Z
 - Disjoint Set 并查集
 - Trie 单词查找树
 - BloomFilter 布隆过滤器
-- LRU Cache (least recently used)(使用频率)
+- LRU Cache (least recently used)(最近最少使用，使用链表)
+- LFU Cache (least frequency used)(最不经常使用，维护计数器)
 
 ![分类](/images/algorithem-index-1.png)
 
@@ -32,13 +33,13 @@ date: 2023-12-16T09:40:42.278Z
 
 - 经典题目
 - In-order/Pre-order/Post-order traversal 针对树的遍历
-- Greedy 贪心
-- Recursion/Backtrace 回溯/递归
+- **Greedy 贪心**
+- **Recursion/Backtrace 回溯/递归**
 - Breadth-first search 广度优先
 - Depth-first search 深度优先
 - Divide and Conquer 分治
-- Dynamic Programming 动态规划
-- Binary Search 二分查找
+- **Dynamic Programming 动态规划**
+- **Binary Search 二分查找**
 - Graph 图
 
 ## 复杂度
@@ -49,8 +50,8 @@ $O(1) < O(logN) < O(N) < O(NlogN) < O(N^2) < O(2^N)$
 步长为两倍的，迭代次数为$logN$
 
 ```js
-while (i < 10){
- i = i * 2
+while (i < 10) {
+  i = i * 2;
 }
 ```
 
@@ -58,7 +59,7 @@ while (i < 10){
 
 常见递归算法事件复杂度
 |Algorithem|Recurrence relationship|Run time|Comment|
-|  ----  | ----  |  ----  | --------------------- |
+| ---- | ---- | ---- | --------------------- |
 |Binary search <br> 二分查找| $$T(n) = T(n/2) + O(1)$$ |$O(log n)$|Apply Master theorem case $c = log_b a$, where $a = 1, b = 2, c = 0, k = 0$|
 |Binary tree traversal <br>二叉树每个节点仅遍历一次|$T(n) = 2T(n/2) + O(1)$|$O(n)$|Apply Master theorem case $c < log_b a$ where $a = 2, b = 2, c = 0$|
 |Optimal sorted matrix search <br>二维矩阵排序|$T(n) = 2T(n/2) + O(1og n)$|$O(n)$|Apply the Akra-Bazzi theorem for $p = 1$ and $g(u) = log(u)$ to get $O(2n - log n)$|

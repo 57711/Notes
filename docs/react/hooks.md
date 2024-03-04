@@ -126,13 +126,212 @@ React 用一个标记变量 didScheduleRenderPhaseUpdate 判断是否是 render 
 
 ![useState过程](/images/useState过程.png)
 
-## useRef
+## useRef 使用
+
+### ref callback
 
 `useRef(callback)`, 利用 ref callback 可以用一个 ref 管理多个 DOM。何时调用 ref callback：
 
 - 当 DOM 渲染到屏幕，调用参数为 dom node。当 DOM 移除，调用参数为 null
 - ref callback 改变时会调用。每一次 render，ref callback 都是新的，会用 null 调用前一次 ref callback，用 DOM node 调用这一次 ref callback
 
-useRef 或 createRef 用来绑定在当前组件的 hostcomponent 上，跨层级或者绑定到 react 组件用 fowardRef。
+### forwardRef
+
+useRef 或 createRef 用来绑定在当前组件的 hostcomponent(宿主元素) 上，跨层级或者绑定到 react 组件用 fowardRef。
 
 Function components cannot be given refs
+
+### expose / useImperativeHandle()
+
+父组件调用子组件内部方法。父组件传递 ref 到子组件，子组件用 forwardRef 包裹，子组件利用`useImperativeHandle`暴露子组件内部方法。可以组合多种操作，dom 操作。
+
+用于子组件封装逻辑，父组件直接调用，modal，drawer 组件。
+
+```js
+const Parent = () => {
+  const ref = useRef();
+  return (
+    <>
+      <Child ref={ref} />
+    </>
+  );
+};
+export const Child = forwardRef((props, ref) => {
+  useImperativeHandle(
+    ref,
+    () => {
+      //  返回一个对象作为暴露的ref
+      return { childMethod1 };
+    },
+    [deps] // 更新ref对象的依赖
+  );
+  const childMethod1 = () => {};
+});
+```
+
+## context 使用
+
+本质创建一个全局的闭包
+
+```js
+const ThemeContext = React.createContext('initial');
+
+const Parent = () => {
+  return (
+    <ThemeContext.provider value="newValue">
+      <Child1 />
+      <Child2 />
+      <ChildComp />
+    </ThemeContext.provider>
+  );
+};
+
+// legacy
+const Child1 = () => {
+  return (
+    <ThemeContext.Consumer>
+      {(value) => <div>{value}</div>}
+    </ThemeContext.Consumer>
+  );
+};
+
+const Child2 = () => {
+  const theme = useContext(ThemeContext);
+  return <div>{theme}</div>;
+};
+
+// legacy
+class ChildComp extends React.Component {
+  // 需要定义到静态属性上
+  static contextType = ThemeContext;
+
+  render() {
+    return <div>{this.context}</div>;
+  }
+}
+```
+
+## useEffect
+
+Effect 是由渲染引起的副作用，与外部系统联系的，网络，web api。
+
+- effect 在 commit 之后执行。
+- 明确 effect 的依赖状态
+- 清理 effect
+
+## useMemo 使用
+
+useMemo 缓存回调函数的返回值
+
+[父组件直接隔离子组件渲染](/react/运行时代码优化.html#usememo)
+
+## useCallback
+
+缓存回调函数
+
+## HOC
+
+### 属性代理
+
+返回一个新组件，新组件渲染传入的组件。
+
+### 反向继承
+
+高阶组件返回一个组件继承入参的组件。可修改组件的声明周期。
+
+```js
+const HOC = (Component) => {
+  return class A extends Component {
+    ComponentDidMount (){
+      ...
+    }
+    render() {
+      return super.render();
+    }
+  };
+};
+```
+
+## 利用 suspence 的异步变同步
+
+- suspence 内的子组件 throw err 会渲染 fallback 的内容。
+- suspence 子组件 throw 一个 promise，promise 敲定会重新渲染子组件。
+
+wrap 可以包装一个 promise，返回 read 函数
+
+```js
+const wrap = (promise) => {
+  let res;
+  let status = 'pending';
+  const suspenser = promise.then(
+    (value) => {
+      res = value;
+      status = 'fullfilled';
+    },
+    (err) => {
+      res = err;
+      status = 'rejected';
+    }
+  );
+
+  return {
+    read() {
+      switch (status) {
+        case 'pending':
+          throw suspenser;
+        case 'fullfilled':
+          return res;
+        case 'rejected':
+          throw res;
+      }
+    },
+  };
+};
+
+// 用suspence 包裹
+<Suspense fallback={<div>loading...</div>}>
+  <Child wrappedApi={wrap(getData())} />
+</Suspense>;
+
+// Child 内可以像同步一样使用
+
+export const Child = ({ wrappedApi }) => {
+  const list = wrappedApi.read();
+  return (
+    <ul>
+      {list.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+};
+```
+
+### suspence 模拟实现
+
+利用 componentDidCatch 和 getDerivedStateFromError 模拟 suspence
+
+```js
+export class Suspence1 extends React.Component {
+  state = {
+    loading: false,
+  };
+  componentDidCatch(error, info) {
+    if (error.suspenser) {
+      // 这里给 promise 添加 then，强制更新组件
+      error.suspenser.then(() => {
+        this.setState({
+          loading: false,
+        });
+      });
+    }
+  }
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { loading: true };
+  }
+  render() {
+    return this.state.loading ? this.props.fallback : this.props.children;
+  }
+}
+```

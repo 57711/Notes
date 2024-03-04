@@ -18,27 +18,67 @@
 
 ```js
 const data = Promise.race([
-  fetch("/api"),
+  fetch('/api'),
   new Promise((resolve, reject) => {
     // Reject after 5 seconds
-    setTimeout(() => reject(new Error("Request timed out")), 5000);
+    setTimeout(() => reject(new Error('Request timed out')), 5000);
   }),
 ])
   .then((res) => res.json())
   .catch((err) => displayError(err));
+
+// --------------------------
+
+let _reject;
+Promise.race([
+  new Promise((resolve, reject) => {
+    _reject = reject;
+  }),
+  fetch('./api'),
+]);
+
+_reject(); // 调用reject来停止 Promise.race 实现超时
+
+// 或者利用 abortController 实现超时
 ```
 
 ### 用于查看 promise 状态
 
 ```js
 function promiseState(promise) {
-  const pendingState = { status: "pending" };
+  const pendingState = { status: 'pending' };
 
   return Promise.race([promise, pendingState]).then(
     (value) =>
-      value === pendingState ? value : { status: "fulfilled", value },
-    (reason) => ({ status: "rejected", reason })
+      value === pendingState ? value : { status: 'fulfilled', value },
+    (reason) => ({ status: 'rejected', reason })
   );
+}
+```
+
+### 用于限制同时执行 promise 个数
+
+利用 Promise.race 来控制新的 promise 插入队列。循环剩余的队列，利用 then 来顺序执行。
+
+```js
+function limitPromise(urls, handler, limit) {
+  let queue = urls.slice();
+  let promises = queue.splice(0, limit).map((url, index) => {
+    return handler(url).then(() => index);
+  });
+
+  return queue
+    .reduce((prePromise, url) => {
+      return prePromise
+        .then(() => {
+          return Promise.race(promises);
+        })
+        .then((index) => {
+          promises[index] = handler(url).then(() => index);
+        })
+        .catch((err) => console.error(err));
+    }, Promise.resolve())
+    .then(() => Promise.all(promises));
 }
 ```
 
@@ -47,27 +87,27 @@ function promiseState(promise) {
 ```js {.line-numbers}
 Promise.resolve()
   .then(function F1() {
-    console.log("promise1");
+    console.log('promise1');
     Promise.resolve()
       .then(function F4() {
-        console.log("promise2");
+        console.log('promise2');
         Promise.resolve()
           .then(function F5() {
-            console.log("promise4");
+            console.log('promise4');
           })
           .then(function F6() {
-            console.log("promise7");
+            console.log('promise7');
           });
       })
       .then(function F7() {
-        console.log("promise5");
+        console.log('promise5');
       });
   })
   .then(function F2() {
-    console.log("promise3");
+    console.log('promise3');
   })
   .then(function F3() {
-    console.log("promise6");
+    console.log('promise6');
   });
 ```
 
@@ -104,7 +144,7 @@ throw 之后都不会执行，promise reject 会打印 error 到控制台
 ```js
 new Promise((resolve, reject) => {
   console.log(1);
-  throw new Error("error");
+  throw new Error('error');
   console.log(2);
   resolve();
   console.log(3);

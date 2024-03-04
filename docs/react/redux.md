@@ -2,6 +2,25 @@
 
 [redux 知识点梳理](https://blog.csdn.net/Sharon598/article/details/109560211)
 
+## 状态管理
+
+软件主要是管理数据，明确数据的声明周期，作用范围，根据这些决定数据存在那里
+
+react 中数据需要多个组件间共享，存在 js 运行时。全局变量，闭包都可以实现。
+
+状态管理需要实现的功能：
+
+- 组件之外，可以在全局共享数据
+  - 闭包
+  - 全局变量
+- 数据可以被修改的方法，并且能被感知
+  - 需要监听方法：拦截器 proxy，观察者模式
+  - 需要按照一定规则修改，action
+  - immutable 没有修改状态，而是新生成了一个状态
+- 修改状态触发 DOM 更新渲染
+  - forceUpdate
+  - setState
+
 ## compose
 
 ```js
@@ -99,6 +118,11 @@ reduce 没有第二个参数， 默认就是 funcs 里的第一个元素作为�
 
 ## redux
 
+### dispatch
+
+- 接收 action，内调用 reducer，reducer 修改 state
+- 调用所有的 listener 更新订阅的方法
+
 ### store
 
 store 中提供的方法：subscribe, dispatch, getState
@@ -167,6 +191,22 @@ class Subject {
 - dispatch 调用完 reducer 之后执行 nofify
 - subscribe 相当于 addObserver
 
+### combineReducer
+
+合并 reducer，最后还是返回新的 reducer
+
+```js
+const combineReducer = (reducers) => {
+  return (state, action) => {
+    const nextState = {};
+    Object.keys.forEach((key) => {
+      nextState[key] = reducers[key](state[key], action);
+    });
+    return nextState;
+  };
+};
+```
+
 ## react-redux
 
 包括两部分 Provider, connect
@@ -177,15 +217,17 @@ provider：
 
 connect：
 
-- connect 接收`mapStateToProps,mapDispatchToProps` 方法。然后返回一个高阶函数，这个高阶函数接收一个组件，返回一个高阶组件（其实就是给传入的组件添加一个写属性和功能），将 state 和 dispatch（action）挂载在子组件的 props 上
+- 一个 HOC
+- state, dispatch 加载为 props。connect 接收`mapStateToProps,mapDispatchToProps` 方法。将 state 和 dispatch（action）挂载在子组件的 props 上
 
-- componentDidMount 中调用 store.subscribe 传入更新函数，订阅更新。更新函数用于强制更新 react 组件。
+- 订阅更新组件。componentDidMount 中调用 store.subscribe 传入重新渲染函数。更新函数用于强制更新 react 组件。
 
 - `mapStateToProps,mapDispatchToProps` 把 state 和 dispatch 挂到组件的 prop 上
 
 ```js
 const connect = (mapStateToProps,mapDispatchToProps) => (Component) => {
     return class Connect extends React.components {
+        static contextType = ReduxContext;
         componentDidMount(){
             this.context.store.subscribe(this.storeHandler.bind(this));
         }

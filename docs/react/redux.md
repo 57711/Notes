@@ -151,14 +151,17 @@ const applyMiddleware =
   (...middlewares) =>
   (createStore) =>
   (reducer) => {
+    // 1. 创建原始store
     const store = createStore(reducer);
     let { getState, dispatch } = store;
+    // 2. 构建一个store，用来执行每一个middleware
     const params = {
       getState,
       dispatch: (action) => dispatch(action),
     };
     const middlewareArr = middlewares.map((middle) => middle(params));
     // [(next) => (action) => {}, ...]
+    // 3. 用compose将middleware串起来，传入原始的dispatch，生成新的dispatch
     disptach = compose(middlewareArr)(dispatch); // 增强后的dispatch，dispatch 传递给参数next
     return { ...store, dispatch };
   };

@@ -5,17 +5,17 @@ export default {
   name: 'vuepress-plugin-default-homepage',
   // 初始化之后，所有的页面已经加载完毕
   async onInitialized(app) {
-    const allDirectory = getDirectory(app.options.source);
-    let content = '';
-    allDirectory.forEach((item) => {
-      let name = item.name;
-      name = name.charAt(0).toUpperCase() + name.slice(1);
-      content += `[${name}](./${item.name})\n\n`;
-    });
-
     // 如果主页不存在
     if (app.pages.every((page) => page.path !== '/')) {
+      const allDirectory = getDirectory(app.options.source);
       // 创建一个主页
+      let content = allDirectory
+        .map((item) => {
+          let name = item.name;
+          name = name.charAt(0).toUpperCase() + name.slice(1);
+          return `[${name}](./${item.name})`;
+        })
+        .join('\n\n');
       const homepage = await createPage(app, {
         path: '/',
         Key: '主页',
@@ -24,11 +24,7 @@ export default {
           layout: 'Layout',
         },
         // 设置 markdown 内容
-        content: `\
-# 欢迎来到 ${app.options.title}
-
-${content}
-`,
+        content: `# 欢迎来到 ${app.options.title}\n\n${content}`,
       });
       // 把它添加到 `app.pages`
       app.pages.push(homepage);

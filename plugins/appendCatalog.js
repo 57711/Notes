@@ -6,11 +6,11 @@ export default (app) => {
 
   allDirectory.forEach((direct) => {
     catalogMap[direct.name] = generateNav(direct.name)
+      .filter((filename) => filename !== 'index.md')
       .map((filename) => {
-        return `[${filename}](/${direct.name}/${filename.replaceAll(
-          ' ',
-          '%20'
-        )})`;
+        return `[${filename.slice(0, -3)}](/${
+          direct.name
+        }/${filename.replaceAll(' ', '%20')})`;
       })
       .join('\n\n');
   });

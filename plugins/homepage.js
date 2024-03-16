@@ -24,7 +24,7 @@ export default {
           layout: 'Layout',
         },
         // 设置 markdown 内容
-        content: `# 欢迎来到 ${app.options.title}\n\n${content}`,
+        content: `# Welcome ${app.options.title}\n\n${content}`,
       });
       // 把它添加到 `app.pages`
       app.pages.push(homepage);

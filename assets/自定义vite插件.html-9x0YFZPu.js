@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-196ac998","path":"/frontend/%E8%87%AA%E5%AE%9A%E4%B9%89vite%E6%8F%92%E4%BB%B6.html","title":"自定义 vite 插件","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1709788779000,"contributors":[{"name":"Paul","email":"imsbt@outlook.com","commits":1}]},"filePathRelative":"frontend/自定义vite插件.md","excerpt":""}');export{t as data};

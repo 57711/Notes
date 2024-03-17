@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-5be367c1","path":"/js/%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88.html","title":"优化方案","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1709087560000,"contributors":[{"name":"Paul","email":"imsbt@outlook.com","commits":2}]},"filePathRelative":"js/优化方案.md","excerpt":""}');export{t as data};

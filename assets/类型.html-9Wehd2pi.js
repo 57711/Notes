@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-2850c420","path":"/go/%E7%B1%BB%E5%9E%8B.html","title":"类型","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1710610756000,"contributors":[{"name":"Paul","email":"imsbt@outlook.com","commits":2}]},"filePathRelative":"go/类型.md","excerpt":""}');export{t as data};

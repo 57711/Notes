@@ -284,3 +284,50 @@ await 之后的语句相当于放到了 new Promise 中，是同步执行。默�
 await 下面的语句相当于放到 Promise.then 中，是微任务。
 
 await 中的语句如果 reject/throw 了，如果没有 catch 就会终止执行整个代码，抛出错误
+
+## async generator
+
+```js
+async *[Symbol.asyncIterator]() {}
+
+// 异步可迭代
+async function* asyncGenerator() {
+  var i = 0;
+  while (i < 3) {
+    yield i++;
+  }
+}
+
+asyncGenerator() // 返回promise
+
+(async function () {
+  for await (num of asyncGenerator()) {
+    console.log(num);
+  }
+})();
+// 0
+// 1
+// 2
+```
+
+```js
+async function* streamAsyncIterator(stream) {
+  const reader = stream.getReader();
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        return;
+      }
+      yield value;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
+// fetch 获取response之后
+for await (const chunk of streamAsyncIterator(response.body)) {
+  // Incrementing the total response length.
+  responseSize += chunk.length;
+}
+```

@@ -89,3 +89,16 @@
 ## webpack require 代码
 
 [webpack-实现代码](/js/模块化.html#webpack-实现代码)
+
+## import() 懒加载
+
+[Webpack 异步](https://blog.csdn.net/qq_41581588/article/details/129177089)
+
+import 会编译成一个独立的 chunk，
+
+执行时：
+
+1. 先通过 jsonp 的方式去加载 test.js，模块所对应的文件（放到`<script>` 中， 监听 oload， onerror），返回一个 promise
+2. 加载回来后调用`webpackJsonpCallback`，将请求过来的模块定义合并到 main.js 中的 modules 中去，再 resolve 上面的 promise。
+3. 合并完后，去加载这个模块，调用 webpack_require
+4. 拿到该模块导出的内容，执行模块

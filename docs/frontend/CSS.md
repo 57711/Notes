@@ -47,3 +47,25 @@ block 子元素之间外边距可以合并取较大值。inline-block 之间不�
 - 父子元素，设置父元素的 padding 或 border
 - 设置父元素 float，grid，flex，`position:absolute`
 - 设置父元素 overflow 为非 visible
+
+## flex
+
+### flex 属性
+
+flex 简写：`flex：flex-grow flex-shrink flex-basis`
+
+flex-grow/flex-shrink 计算：
+
+1. 先计算**正负可用空间**
+2. 对正负可用空间按比例算出需要 grow 或 shrink 的值
+3. 最后把值作用在 with 或者 flex-basis 上
+
+### justify-content/align-items
+
+justify-content: 主轴（宽度上）
+align-items: 纵轴
+
+- center：每行中点，左右间距相同
+- space-between: 首位元素紧贴行首行尾
+- space-around：元素之间间距相同，两边间距为中间间距一半
+- space-evenly：元素所有间距都相同

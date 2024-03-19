@@ -132,6 +132,125 @@ promise6;
 promise7;
 ```
 
+## new Promise().then 和 Promise.resolve()
+
+Promise.resolve() 立即返回一个 promise，后面的 then 会在当前微任务队列清空后立即执行
+
+new Promise.then() 的 then 放到下一次微任务执行
+
+一下两个例子`Promise.resolve(undefined)`, promise 直接敲定了
+
+```js
+Promise.resolve(
+  (async () => {
+    console.log(1);
+    Promise.resolve(
+      (async () => {
+        new Promise((r) => {
+          const res = Promise.resolve(
+            (() => {
+              console.log(3);
+            })()
+          );
+          console.log('res');
+          r(res);
+        }).then(() => console.log(2222)); // new Promise,放到下一次微任务队列
+        console.log('res2');
+      })()
+    ).then(() => console.log(1111)); // Promise.resolve,放到当前微任务队列
+  })()
+).then(() => console.log('over')); // Promise.resolve,放到当前微任务队列
+
+// 1
+// 3
+// 1111
+// over
+// 2222
+```
+
+```js
+Promise.resolve(
+  (async () => {
+    console.log(1);
+    new Promise((resolve) => {
+      resolve(
+        (async () => {
+          Promise.resolve(
+            Promise.resolve(
+              (() => {
+                console.log(3);
+              })()
+            )
+          ).then(() => console.log(2222)); // Promise.resolve()
+          console.log('2');
+        })()
+      );
+    }).then(() => console.log(1111)); // 由 new Promise()
+  })()
+).then(() => console.log('over')); // 由Promise.resolve()
+
+// 1
+// 3
+// 2
+// 2222
+// over
+// 1111
+```
+
+resolve 里是 promise，也需要敲定之后 then 才能放入队列
+
+```js
+Promise.resolve(
+  new Promise((r) => {
+    const res = Promise.resolve(console.log(3));
+    r(res);
+  }).then(() => console.log(2))
+).then(() => console.log(1));
+// 3
+// 2
+// 1
+```
+
+## resolve 一个 promise
+
+resolve 一个 promise，resolve 内部调用这个`promise.then(resolve)`，之后再 resolve 一次，相当于产生 2 个微任务。
+
+NewPromiseResolveThenableJob
+
+```js {6}
+let proms = new Promise((resolve) => {
+  console.log('begin');
+  resolve('then');
+});
+new Promise((resolve) => {
+  resolve(proms); // proms.then(resolve) -> then 又产生一个微任务 resolve(promise) -> then的微任务 console.log(val)
+}).then((val) => {
+  console.log(val);
+});
+
+new Promise((resolve) => {
+  console.log(1);
+  resolve();
+})
+  .then(() => {
+    console.log(2);
+  })
+  .then(() => {
+    console.log(3);
+  })
+  .then(() => {
+    console.log(4);
+  });
+// micro-queue
+// v.then(resolve), 2  ==>
+// 2, resolve()        ==>
+// resolve(), 3        ==> 2
+// 3, val              ==> 2
+// val, 4              ==> 2,3
+// 4                   ==> 2,3,then,
+//                     ==> 2,3,then,4
+```
+
 ## promise 内同时 resolve，reject
 
 - throw 之后的代码都不执行，错误会被内部捕获

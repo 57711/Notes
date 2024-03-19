@@ -102,3 +102,30 @@ import 会编译成一个独立的 chunk，
 2. 加载回来后调用`webpackJsonpCallback`，将请求过来的模块定义合并到 main.js 中的 modules 中去，再 resolve 上面的 promise。
 3. 合并完后，去加载这个模块，调用 webpack_require
 4. 拿到该模块导出的内容，执行模块
+
+## HMR
+
+![webpack-hmr](/images/webpack-hmr.png)
+
+webpack-dev-middleware
+
+- 将资打包的文件储在内存
+- 监听文件变化
+- socketjs 连接浏览器与服务器通信
+
+webpack-hot-middleware
+
+- 打包 HMR runtime 代码到客户端，客户端订阅服务端更新变化
+- 实现页面重载
+
+webpack-dev-server/client 浏览器端服务，与服务器连接，接收通知得到 hash 值，通知 webpack/hot/dev-server，
+
+webpack/hot/dev-server 判断直接 reload 还是 hmr
+
+hmr 过程，通知 hotModuleReplacement.runtime 获取更新文件，利用 jsonp，先获取 hash 的 json，再根据 hash 获取最新代码块。
+
+hotModulePlugin 接收代码块，新旧对比，更新模块和引用。hotApply 方法：
+
+- 找出过期模块和过期依赖
+- 删除过期模块和过期依赖
+- 将新的模块添加到 modules 中，当下次调用 **webpack_require** 时，就是获取新的模块了。

@@ -3,7 +3,6 @@ import mk from '@aquabx/markdown-it-katex';
 export default () => ({
   name: 'vuepress-plugin-katex',
   extendsMarkdown: (md) => {
-    console.log('extendsMarkdown');
     md.use(mk);
   },
   onInitialized(app) {

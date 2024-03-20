@@ -9,3 +9,4 @@
 - Symbol.iterator，被 `for ... of` 调用
 - Symbole.hasInstance， 被 instanceof 调用
 - Symbol.toPrimitive 强制类型转换
+- Symbol.unscopables with 逃逸

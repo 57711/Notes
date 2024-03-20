@@ -129,3 +129,27 @@ hotModulePlugin 接收代码块，新旧对比，更新模块和引用。hotAppl
 - 找出过期模块和过期依赖
 - 删除过期模块和过期依赖
 - 将新的模块添加到 modules 中，当下次调用 **webpack_require** 时，就是获取新的模块了。
+
+## 提取公共代码
+
+[增量打包](https://juejin.cn/post/6844903553127940110)
+
+plugin commonsChunkPlugin，entry 中设置相当于多入口.
+
+还需要分离 manifest 映射关系文件，webpack-md5-hash 插件可以不生成 manifest。
+
+```js
+entry: {
+  // 相当于多入口
+  common: ['lodash', 'jquery'];
+  react: ['react', 'react-dom'];
+}
+
+plugins:{
+  new commonsChunkPlugin({
+    name: ['common', 'react'],
+    minChunks: 2,
+  }),
+  new WebpackMd5Hash(),
+}
+```

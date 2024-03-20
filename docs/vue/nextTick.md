@@ -50,7 +50,7 @@ function nextTick(cb, ctx) {
   }
 }
 
-function flushCallbackss() {
+function flushCallbacks() {
   pending = false; // 回调触发完了，可以开始下一次了
   // 拷贝一份，如果nextTick 中嵌套nextTick, 能防止内部的nextTick 在这一次被调用。
   const copies = callbacks.slice(0);

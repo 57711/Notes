@@ -203,3 +203,21 @@ c++ 文件通过 node-gyp 编译为`.node` 文件
 **收益：** C++ 运算比 js 快
 
 **成本也可能会大过收益。**
+
+## 环境变量
+
+### 命令行设置环境变量
+
+windows 环境下`set NODE_ENV=development && node index.js` 设置到`process.env`。
+
+mac `export NODE_ENV=development && node index.js`
+
+利用 cross-env `cross-env NODE_ENV=development node index.js`
+
+### `.env` 文件设置环境变量
+
+利用 dotenv 读取`.env` 文件 `require('.env').config()`
+
+### 替换 process 在浏览器中使用
+
+webpack 中利用`new webpack.DefinePlugin()`将环境变量定义到`process.env`中。业务代码可以拿到配置的环境变量

@@ -13,6 +13,20 @@
 
 平移 `ctx.translate(dx, dy)`, 缩放 `ctx.scale(1.1)`, 需要平移要清除所有的像素重画。
 
+### canvas 优化
+
+- 上下文切换开销大。减少对上下文`context`的修改，修改一次绘制所有有关的像素。
+- canvas 拆分，根据堆叠层级拆分，根据绘制范围拆分。
+- offscreencanvas
+  - `document.createElement("canvas")`创建缓存中的 canvas，在上面绘制，用`ctx.drawImage(canvasOffscreen, x, y)` 绘制到屏幕上的 canvas。
+    - 适合重复元素绘制，或者不需要变更的内容。
+    - 双缓存，两个 canvas 交替绘制
+  - OffscreenCanvas API，
+    - 可以在主线程或 worker 中执行。避免主线程卡顿。
+    - 同步`new OffscreenCanvas(256, 256); offscreen.transferToImageBitmap(); ctx.transferFromImageBitmap(bitmapOne)`
+    - 异步`canvasEl.transferControlToOffscreen(); worker.postMessage({ canvas: offscreen }, [offscreen]);`
+- 增量渲染，如果有滚动，可以将上一帧内容保存，复用上一帧内容渲染，再加上下一帧内容实现滚动。
+
 ## WebGL
 
 WebGL 提供了更底层的图形 API，可以用来创建复杂的 3D 图形和效果。

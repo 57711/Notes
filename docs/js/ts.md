@@ -19,7 +19,7 @@ objects arrays functions classes 自定义的类型
 
 对象类型可以欺骗 ts。
 
-## 类型注释 annotation 推断 inference
+## 类型注释 annotation / 推断 inference
 
 注释：一段代码用来告诉 ts 变量引用的值的类型，我们告诉 ts type
 推断：ts 自动找出变量引用值的类型， ts 猜 type
@@ -30,7 +30,7 @@ objects arrays functions classes 自定义的类型
 
 需要注释的情况：
 
-- 声明变量，初始化变量在另一行语句。推断在声明变量且初始化的时候才生效，
+- 声明变量，初始化变量的代码不在一行。推断在声明变量且初始化的时候才生效，
 - 函数返回 any，需要明确类型。 `json.parse()` 返回 any
 - 变量的类型不能被推断的时候
 
@@ -118,8 +118,6 @@ class User extends ClassName implements I1, I2{
   };
   getName = () => this.name;
 }
-
-
 ```
 
 ## 主动推断函数的类型
@@ -146,4 +144,177 @@ async function retryFn<T>(
 function getPosts(): Promise<string[]> {}
 const aa = retryFn(getPosts, 3);
 // ts 可以直接推断出aa 的类型 Promise<string[]>
+```
+
+## 类型体操
+
+类型体操就是类型编程，对类型参数做各种逻辑运算，以产生新的类型。
+
+### 运算逻辑
+
+- 条件 `T extends U ? X : Y`
+- 约束 `T extends Length`
+- 推导 `type First<T extends unknown[]> = T extends [infer F, ...infer R] ? F : never;`
+- 联合 `1|2|3`
+- 交叉 `{ a: number } & { c: boolean }`
+- 索引 `keyof T`，获取所有键，返回联合类型
+- 索引访问 `I[keyof I]`，获取所有值，返回联合类型
+- 索引遍历 `[P in keyof typeof obj]`
+- 重映射 `as`
+
+```ts
+// 通过索引查询 keyof，索引访问 t[k]，索引遍历 in，索引重映射 as，返回全新的 key、value 构成的新的映射类型
+type MapType<T> = {
+  [Key in keyof T as `${Key & string}${Key & string}${Key & string}`]: [
+    T[Key],
+    T[Key],
+    T[Key]
+  ];
+};
+// {
+//     aaa: [1, 1, 1];
+//     bbb: [2, 2, 2];
+// }
+type res3 = MapType<{ a: 1; b: 2 }>;
+```
+
+### 模式匹配做提取
+
+extends 一个类型，需要提取的用 infer 声明
+
+```ts
+// 提取函数参数类型
+type GetParams<F extends Function> = F extends (...args: infer A) => void
+  ? A
+  : never;
+type ParamsResult = GetParams<(name: string, age: number) => string>;
+```
+
+### 重新构造做变换
+
+要变化就要构造新的类型，在构造过程中可以对原类型做过滤和变换
+
+```ts
+type CapitalizeStr<S extends string> = S extends `${infer F}${infer R}`
+  ? `${Uppercase<F>}${R}`
+  : S;
+
+type CapitalizeResult = CapitalizeStr<'typescript'>;
+```
+
+### 递归复用做循环
+
+利用递归来进行循环
+
+```ts
+type ReverseArr<Arr extends unknown[]> = Arr extends [
+  infer First,
+  ...infer Rest
+]
+  ? [...ReverseArr<Rest>, First]
+  : Arr;
+
+type ReverseArrResult = ReverseArr<[1, 2, 3, 4, 5]>;
+```
+
+### 数组长度做计数
+
+利用递归构造指定长度的数组，然后取数组的长度。
+
+```ts
+type BuildArray<
+  Length extends number,
+  Ele = unknown,
+  Arr extends unknown[] = []
+> = Arr['length'] extends Length ? Arr : BuildArray<Length, Ele, [...Arr, Ele]>;
+
+type Add<Num1 extends number, Num2 extends number> = [
+  ...BuildArray<Num1>,
+  ...BuildArray<Num2>
+]['length'];
+
+type AddResult = Add<32, 25>;
+```
+
+### 例子
+
+#### partial
+
+```ts
+type TPartial<T> = {
+  [K in keyof T]?: T[K];
+};
+```
+
+#### required
+
+```ts
+type TRequired<T> = {
+  [K in keyof T]-?: T[K];
+};
+type RequiredRes = TRequired<{ name?: 'aa'; age?: 18 }>;
+```
+
+#### readonly
+
+```ts
+type TReadonly<T> = {
+  readonly [K in keyof T]: T[K];
+};
+type ReadonlyRes = TReadonly<{ name?: 'aa'; age?: 18 }>;
+```
+
+#### pick
+
+```ts
+type TPick<T, K extends keyof T> = {
+  [P in K]: T[P];
+};
+type PickRes = TPick<{ name?: 'aa'; age?: 18 }, 'name'>;
+```
+
+#### record
+
+```ts
+type TRecord<K extends keyof any, T> = {
+  [P in K]: T;
+};
+type RecordRes = TRecord<'aa' | 'bb', string>;
+```
+
+#### exclude
+
+```ts
+type TExclude<T, U> = T extends U ? never : T;
+type ExcludeRes = TExclude<'aa' | 'bb', 'aa'>;
+```
+
+#### extract
+
+```ts
+type TExtract<T, U> = T extends U ? T : never;
+type ExtractRes = TExtract<'aa' | 'bb', 'aa'>;
+```
+
+#### omit
+
+利用 pick 和 exclude
+
+```ts
+type TOmit<T, U> = TPick<T, TExclude<keyof T, U>>;
+type OmitRes = TOmit<{ name: 'aa'; age: 18 }, 'name'>;
+```
+
+#### awaite
+
+```ts
+type TAwaited<T> = T extends null | undefined
+  ? T
+  : T extends object & { then(onfulfilled: infer F): any }
+  ? F extends (value: infer V, ...args: any) => any
+    ? TAwaited<V>
+    : never
+  : T;
+
+type AwaitedRes = TAwaited<Promise<Promise<Promise<string>>>>;
 ```

@@ -105,12 +105,15 @@ import 会编译成一个独立的 chunk，
 
 ## HMR
 
+### webpack
+
 ![webpack-hmr](/images/webpack-hmr.png)
+![webpack-hmr2](/images/webpack-hmr2.png)
 
 webpack-dev-middleware
 
-- 将资打包的文件储在内存
-- 监听文件变化
+- 将打包的文件储在内存
+- 监听文件变化 chokidar
 - socketjs 连接浏览器与服务器通信
 
 webpack-hot-middleware
@@ -129,6 +132,24 @@ hotModulePlugin 接收代码块，新旧对比，更新模块和引用。hotAppl
 - 找出过期模块和过期依赖
 - 删除过期模块和过期依赖
 - 将新的模块添加到 modules 中，当下次调用 **webpack_require** 时，就是获取新的模块了。
+
+### vite
+
+- 在预编译阶段即开发服务器创建时
+  - 使用 ws 库来基于开发服务器（HTTP 服务）创建 WebSocket 服务端
+  - 使用 chokidar 创建监听器，监听相关文件变动，针对新增、删除、修改做对应处理
+- 在按需编译阶段即开发服务器运行时
+  - 客户端即@vite/client 文件中使用 WebSocket 对象按照开发服务器地址创建 WebScoket 客户端从而建立连接
+- 当修改文件后，监听器监听到对应文件改变就会触发 change 事件，其回调函数会被执行：
+  - 首先会处理依赖图谱相关的逻辑
+  - 对于 client 目录、html、vite 配置文件等不同文件的更改会通知浏览器做相关操作，通知的机制就是通过 WebSocket 连接来实现的
+    - vite 配置文件的更改会重启服务器
+    - client 目录下文件和 html 文件会触发 full-load 类型的操作 location.reload，重新加载
+    - 其他文件更改触发 update 类型操作
+      - js-update，构建?import&t=时间戳形式的地址使用 import 动态加载模块
+      - css-update
+      - 加载后的内容会存入队列中批量更新
+- 当新增或删除文件后，监听器就会触发 add、unlink 事件，之后通知客户端更新的逻辑与新增操作时并没有任何区别，只是要处理模块不同而已。
 
 ## 提取公共代码
 

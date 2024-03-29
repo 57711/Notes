@@ -208,6 +208,8 @@ c++ 文件通过 node-gyp 编译为`.node` 文件
 
 ### 命令行设置环境变量
 
+`npm run env` 获取完整变量列表
+
 windows 环境下`set NODE_ENV=development && node index.js` 设置到`process.env`。
 
 mac `export NODE_ENV=development && node index.js`

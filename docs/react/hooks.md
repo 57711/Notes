@@ -174,7 +174,7 @@ export const Child = forwardRef((props, ref) => {
 本质创建一个全局的闭包
 
 ```js
-const ThemeContext = React.createContext('initial');
+const ThemeContext = React.createContext("initial");
 
 const Parent = () => {
   return (
@@ -229,6 +229,8 @@ useMemo 缓存回调函数的返回值
 
 缓存回调函数
 
+## useSignal
+
 ## HOC
 
 ### 属性代理
@@ -262,26 +264,26 @@ wrap 可以包装一个 promise，返回 read 函数
 ```js
 const wrap = (promise) => {
   let res;
-  let status = 'pending';
+  let status = "pending";
   const suspenser = promise.then(
     (value) => {
       res = value;
-      status = 'fullfilled';
+      status = "fullfilled";
     },
     (err) => {
       res = err;
-      status = 'rejected';
+      status = "rejected";
     }
   );
 
   return {
     read() {
       switch (status) {
-        case 'pending':
+        case "pending":
           throw suspenser;
-        case 'fullfilled':
+        case "fullfilled":
           return res;
-        case 'rejected':
+        case "rejected":
           throw res;
       }
     },
